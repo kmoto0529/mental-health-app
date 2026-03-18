@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>週次メンタルヘルスチェック</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background: linear-gradient(90deg, #43cea2, #185a9d);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 1.5rem;
+        }
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 0 5px;
+            background-color: #fff;
+        }
+        .tab.active {
+            background-color: #43cea2;
+            color: white;
+        }
+        .content {
+            display: none;
+            padding: 20px;
+        }
+        .content.active {
+            display: block;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .question p {
+            margin: 10px 0;
+        }
+        .emoji-options {
+            display: flex;
+            justify-content: space-around;
+            margin: 10px 0;
+        }
+        .emoji-options label {
+            text-align: center;
+            cursor: pointer;
+        }
+        .emoji-options input {
+            display: none;
+        }
+        .emoji-options input:checked + span {
+            font-size: 2rem;
+        }
+        .progress-bar {
+            height: 20px;
+            background-color: #ccc;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .progress-bar-inner {
+            height: 100%;
+            width: 0;
+            background-color: #43cea2;
+            transition: width 0.3s;
+        }
+        .submit-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #43cea2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .submit-button.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .summary-table th, .summary-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        .summary-table tr.highlight {
+            background-color: #43cea2;
+            color: white;
+        }
+        .detail-card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>今週のきもちチェック 🌱</header>
+
+    <div class="tab-container">
+        <div class="tab active" onclick="switchTab('check')">今週</div>
+        <div class="tab" onclick="switchTab('record')">きろく</div>
+    </div>
+
+    <div id="check" class="content active">
+        <div class="progress-bar">
+            <div class="progress-bar-inner" id="progressBar"></div>
+        </div>
+        <div class="question">
+            <p>Q1 学校生活への満足度は？</p>
+            <div class="emoji-options">
+                <label><input type="radio" name="q1" value="☀️最高！"><span>☀️</span><br>最高！</label>
+                <label><input type="radio" name="q1" value="🌤️まあまあ"><span>🌤️</span><br>まあまあ</label>
+                <label><input type="radio" name="q1" value="☁️ふつう"><span>☁️</span><br>ふつう</label>
+                <label><input type="radio" name="q1" value="🌧️つらい"><span>🌧️</span><br>つらい</label>
+                <label><input type="radio" name="q1" value="⛈️しんどい"><span>⛈️</span><br>しんどい</label>
+            </div>
+        </div>
+        <div class="question">
+            <p>Q2 友人関係は良好ですか？</p>
+            <div class="emoji-options">
+                <label><input type="radio" name="q2" value="🥰最高！"><span>🥰</span><br>最高！</label>
+                <label><input type="radio" name="q2" value="😊まあまあ"><span>😊</span><br>まあまあ</label>
+                <label><input type="radio" name="q2" value="😐ふつう"><span>😐</span><br>ふつう</label>
+                <label><input type="radio" name="q2" value="😕微妙…"><span>😕</span><br>微妙…</label>
+                <label><input type="radio" name="q2" value="😞しんどい"><span>😞</span><br>しんどい</label>
+            </div>
+        </div>
+        <div class="question">
+            <p>Q3 最近よく眠れていますか？</p>
+            <div class="emoji-options">
+                <label><input type="radio" name="q3" value="🌙ぐっすり"><span>🌙</span><br>ぐっすり</label>
+                <label><input type="radio" name="q3" value="😪まあまあ"><span>😪</span><br>まあまあ</label>
+                <label><input type="radio" name="q3" value="🥱ふつう"><span>🥱</span><br>ふつう</label>
+                <label><input type="radio" name="q3" value="😵眠れない"><span>😵</span><br>眠れない</label>
+                <label><input type="radio" name="q3" value="🌑全然ダメ"><span>🌑</span><br>全然ダメ</label>
+            </div>
+        </div>
+        <textarea placeholder="コメント（任意）" style="width: 100%; height: 100px; margin-top: 10px;" id="comment"></textarea>
+        <button class="submit-button" id="submitButton" onclick="submitCheck()">記録する</button>
+    </div>
+
+    <div id="record" class="content">
+        <table class="summary-table" id="summaryTable">
+            <thead>
+                <tr>
+                    <th>週</th>
+                    <th>学校生活</th>
+                    <th>友人関係</th>
+                    <th>睡眠</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Records will be dynamically added here -->
+            </tbody>
+        </table>
+        <div id="detailCards">
+            <!-- Detail cards will be dynamically added here -->
+        </div>
+    </div>
+
+    <script>
+        const progressBar = document.getElementById('progressBar');
+        const submitButton = document.getElementById('submitButton');
+        const summaryTable = document.getElementById('summaryTable').querySelector('tbody');
+        const detailCards = document.getElementById('detailCards');
+
+        const questions = ['q1', 'q2', 'q3'];
+
+        function updateProgress() {
+            const answered = questions.filter(q => document.querySelector(`input[name="${q}"]:checked`)).length;
+            progressBar.style.width = `${(answered / questions.length) * 100}%`;
+            if (answered === questions.length) {
+                submitButton.classList.add('active');
+            } else {
+                submitButton.classList.remove('active');
+            }
+        }
+
+        document.querySelectorAll('input[type="radio"]').forEach(input => {
+            input.addEventListener('change', updateProgress);
+        });
+
+        function submitCheck() {
+            if (!submitButton.classList.contains('active')) return;
+
+            const record = {
+                week: '今週',
+                q1: document.querySelector('input[name="q1"]:checked').value,
+                q2: document.querySelector('input[name="q2"]:checked').value,
+                q3: document.querySelector('input[name="q3"]:checked').value,
+                comment: document.getElementById('comment').value
+            };
+
+            saveRecord(record);
+            alert('記録しました！');
+            loadRecords();
+        }
+
+        function saveRecord(record) {
+            const records = JSON.parse(localStorage.getItem('mentalHealthRecords') || '[]');
+            records.unshift(record);
+            localStorage.setItem('mentalHealthRecords', JSON.stringify(records));
+        }
+
+        function loadRecords() {
+            const records = JSON.parse(localStorage.getItem('mentalHealthRecords') || '[]');
+            summaryTable.innerHTML = '';
+            detailCards.innerHTML = '';
+
+            records.forEach((record, index) => {
+                const row = document.createElement('tr');
+                if (index === 0) row.classList.add('highlight');
+                row.innerHTML = `
+                    <td>${record.week}</td>
+                    <td>${record.q1}</td>
+                    <td>${record.q2}</td>
+                    <td>${record.q3}</td>
+                `;
+                summaryTable.appendChild(row);
+
+                const card = document.createElement('div');
+                card.classList.add('detail-card');
+                card.innerHTML = `
+                    <p>週: ${record.week}</p>
+                    <p>学校生活: ${record.q1}</p>
+                    <p>友人関係: ${record.q2}</p>
+                    <p>睡眠: ${record.q3}</p>
+                    <p>コメント: ${record.comment || 'なし'}</p>
+                `;
+                detailCards.appendChild(card);
+            });
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.content').forEach(content => content.classList.remove('active'));
+
+            document.querySelector(`.tab[onclick="switchTab('${tabId}')"]`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        loadRecords();
+    </script>
+</body>
+</html>
