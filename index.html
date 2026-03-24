@@ -132,77 +132,93 @@ body{font-family:'Nunito',sans-serif;background:#eef2ff;display:flex;justify-con
 </div>
 </div>
 <script>
-var A={1:null,2:null,3:null};
-var E={1:['☀️','🌤️','☁️','🌧️','⛈️'],2:['🥰','😊','😐','😕','😞'],3:['🌙','😪','🥱','😵','🌑']};
-function ST(tab){
-  document.querySelectorAll('.pnl').forEach(function(p){p.classList.remove('on')});
-  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on')});
-  document.getElementById(tab).classList.add('on');
-  document.getElementById(tab==='check'?'t1':'t2').classList.add('on');
-  document.getElementById('T').textContent=tab==='check'?'今週のきもちチェック 🌱':'きもちのきろく 📖';
-  window.scrollTo(0,0);
-  if(tab==='record')RR();
-}
-function SA(q,i,btn){
-  A[q]=i;
-  btn.closest('.erow').querySelectorAll('.ebtn').forEach(function(b){b.classList.remove('on')});
-  btn.classList.add('on');
-  document.getElementById('c'+q).classList.add('ok');
-  UP();
-}
-function UP(){
-  var n=0;
-  [1,2,3].forEach(function(q){if(A[q]!==null)n++});
-  document.getElementById('b1').className='pbar'+(A[1]!==null?' done':'');
-  document.getElementById('b2').className='pbar'+(A[2]!==null?' done':'');
-  document.getElementById('b3').className='pbar'+(A[3]!==null?' done':'');
-  document.getElementById('PT').textContent=n+' / 3 回答済み';
-  var sb=document.getElementById('SB');
-  if(n===3){sb.textContent='記録する ✓';sb.className='subbtn go';}
-  else{sb.textContent='あと'+(3-n)+'問答えてね';sb.className='subbtn';}
-}
-function SUB(){
-  if(A[1]===null||A[2]===null||A[3]===null)return;
-  var r={date:new Date().toISOString().split('T')[0],q1:E[1][A[1]],q2:E[2][A[2]],q3:E[3][A[3]],comment:document.getElementById('CMT').value};
-  var rs=JSON.parse(localStorage.getItem('mh')||'[]');
-  rs.unshift(r);
-  localStorage.setItem('mh',JSON.stringify(rs));
-  document.getElementById('check').innerHTML='<div class="done"><div class="done-ico">✨</div><div class="done-ttl">記録できたよ！</div><div class="done-sub">今週も正直に答えてくれてありがとう。<br>あなたの気持ちを大切にしていくね。</div><div class="done-btns"><button class="btnG" onclick="ST('record')">きろくを見る →</button><button class="btnW" onclick="location.reload()">やり直す</button></div></div>';
-}
-function GSW(d){var nd=new Date(d);var day=nd.getDay();nd.setDate(nd.getDate()-day+(day===0?-6:1));nd.setHours(0,0,0,0);return nd;}
-function GWD(ds){var ms=7*24*60*60*1000;return Math.round((GSW(new Date())-GSW(new Date(ds)))/ms);}
-function RR(){
-  var rs=JSON.parse(localStorage.getItem('mh')||'[]');
-  var tb=document.getElementById('SB2');
-  var dc=document.getElementById('DC');
-  tb.innerHTML='';dc.innerHTML='';
-  var LB=['今週 ✦','先週','2週前','3週前'];
-  var CL=['#43cea2','#3498db','#FF9F43','#bbb'];
-  var seen={};
-  rs.forEach(function(r){
-    var d=GWD(r.date);
-    if(d<0||d>3||seen[d])return;
-    seen[d]=true;
-    var lb=LB[d],cl=CL[d];
-    var tr=document.createElement('tr');
-    if(d===0)tr.className='tw';
-    tr.innerHTML='<td>'+lb+'</td><td>'+r.q1+'</td><td>'+r.q2+'</td><td>'+r.q3+'</td>';
-    tb.appendChild(tr);
-    var cd=document.createElement('div');
-    cd.className='dcard';
-    cd.style.borderLeftColor=cl;
-    cd.innerHTML='<div class="dhead"><span class="dwk">'+lb+'</span><span class="dper">'+r.date+'</span></div><div class="dboxes"><div class="dbox"><span class="dblbl">🏫 学校</span><span class="dbico">'+r.q1+'</span></div><div class="dbox"><span class="dblbl">👫 友人</span><span class="dbico">'+r.q2+'</span></div><div class="dbox"><span class="dblbl">😴 睡眠</span><span class="dbico">'+r.q3+'</span></div></div>'+(r.comment?'<div class="dcmt">'+r.comment+'</div>':'');
-    dc.appendChild(cd);
-  });
-}
-document.getElementById('D').textContent=new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric',weekday:'short'});
-if(!localStorage.getItem('mh')){
-  localStorage.setItem('mh',JSON.stringify([
-    {date:'2026-03-17',q1:'☀️',q2:'😊',q3:'🌙',comment:'友達と放課後カフェ行った！'},
-    {date:'2026-03-10',q1:'☁️',q2:'😕',q3:'😵',comment:'しんどかった週'},
-    {date:'2026-03-03',q1:'🌧️',q2:'😐',q3:'🥱',comment:''}
-  ]));
-}
+(function(){
+  var A={1:null,2:null,3:null};
+  var E={1:['☀️','🌤️','☁️','🌧️','⛈️'],2:['🥰','😊','😐','😕','😞'],3:['🌙','😪','🥱','😵','🌑']};
+
+  function ST(tab){
+    document.querySelectorAll('.pnl').forEach(function(p){p.classList.remove('on')});
+    document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on')});
+    document.getElementById(tab).classList.add('on');
+    document.getElementById(tab==='check'?'t1':'t2').classList.add('on');
+    document.getElementById('T').textContent=tab==='check'?'今週のきもちチェック 🌱':'きもちのきろく 📖';
+    window.scrollTo(0,0);
+    if(tab==='record')RR();
+  }
+
+  function SA(q,i,btn){
+    A[q]=i;
+    btn.closest('.erow').querySelectorAll('.ebtn').forEach(function(b){b.classList.remove('on')});
+    btn.classList.add('on');
+    document.getElementById('c'+q).classList.add('ok');
+    UP();
+  }
+
+  function UP(){
+    var n=0;
+    [1,2,3].forEach(function(q){if(A[q]!==null)n++});
+    document.getElementById('b1').className='pbar'+(A[1]!==null?' done':'');
+    document.getElementById('b2').className='pbar'+(A[2]!==null?' done':'');
+    document.getElementById('b3').className='pbar'+(A[3]!==null?' done':'');
+    document.getElementById('PT').textContent=n+' / 3 回答済み';
+    var sb=document.getElementById('SB');
+    if(n===3){sb.textContent='記録する ✓';sb.className='subbtn go';}
+    else{sb.textContent='あと'+(3-n)+'問答えてね';sb.className='subbtn';}
+  }
+
+  function SUB(){
+    if(A[1]===null||A[2]===null||A[3]===null)return;
+    var r={date:new Date().toISOString().split('T')[0],q1:E[1][A[1]],q2:E[2][A[2]],q3:E[3][A[3]],comment:document.getElementById('CMT').value};
+    var rs=JSON.parse(localStorage.getItem('mh')||'[]');
+    rs.unshift(r);
+    localStorage.setItem('mh',JSON.stringify(rs));
+    RR();
+    document.getElementById('check').innerHTML='<div class="done"><div class="done-ico">✨</div><div class="done-ttl">記録できたよ！</div><div class="done-sub">今週も正直に答えてくれてありがとう。<br>あなたの気持ちを大切にしていくね。</div><div class="done-btns"><button class="btnG" onclick="gotoRecord()">きろくを見る →</button><button class="btnW" onclick="location.reload()">やり直す</button></div></div>';
+  }
+
+  function GSW(d){var nd=new Date(d);var day=nd.getDay();nd.setDate(nd.getDate()-day+(day===0?-6:1));nd.setHours(0,0,0,0);return nd;}
+  function GWD(ds){return Math.round((GSW(new Date())-GSW(new Date(ds)))/(7*24*60*60*1000));}
+
+  function RR(){
+    var rs=JSON.parse(localStorage.getItem('mh')||'[]');
+    var tb=document.getElementById('SB2');
+    var dc=document.getElementById('DC');
+    if(!tb||!dc)return;
+    tb.innerHTML='';dc.innerHTML='';
+    var LB=['今週 ✦','先週','2週前','3週前'];
+    var CL=['#43cea2','#3498db','#FF9F43','#bbb'];
+    var seen={};
+    rs.forEach(function(r){
+      var d=GWD(r.date);
+      if(d<0||d>3||seen[d])return;
+      seen[d]=true;
+      var lb=LB[d],cl=CL[d];
+      var tr=document.createElement('tr');
+      if(d===0)tr.className='tw';
+      tr.innerHTML='<td>'+lb+'</td><td>'+r.q1+'</td><td>'+r.q2+'</td><td>'+r.q3+'</td>';
+      tb.appendChild(tr);
+      var cd=document.createElement('div');
+      cd.className='dcard';
+      cd.style.borderLeftColor=cl;
+      cd.innerHTML='<div class="dhead"><span class="dwk">'+lb+'</span><span class="dper">'+r.date+'</span></div><div class="dboxes"><div class="dbox"><span class="dblbl">🏫 学校</span><span class="dbico">'+r.q1+'</span></div><div class="dbox"><span class="dblbl">👫 友人</span><span class="dbico">'+r.q2+'</span></div><div class="dbox"><span class="dblbl">😴 睡眠</span><span class="dbico">'+r.q3+'</span></div></div>'+(r.comment?'<div class="dcmt">'+r.comment+'</div>':'');
+      dc.appendChild(cd);
+    });
+  }
+
+  // グローバルに公開（onclickから呼べるように）
+  window.ST=ST; window.SA=SA; window.SUB=SUB;
+  window.gotoRecord=function(){ST('record');};
+
+  document.getElementById('D').textContent=new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric',weekday:'short'});
+
+  if(!localStorage.getItem('mh')){
+    localStorage.setItem('mh',JSON.stringify([
+      {date:'2026-03-17',q1:'☀️',q2:'😊',q3:'🌙',comment:'友達と放課後カフェ行った！'},
+      {date:'2026-03-10',q1:'☁️',q2:'😕',q3:'😵',comment:'しんどかった週'},
+      {date:'2026-03-03',q1:'🌧️',q2:'😐',q3:'🥱',comment:''}
+    ]));
+  }
+})();
 </script>
 </body>
 </html>
