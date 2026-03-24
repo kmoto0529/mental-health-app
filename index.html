@@ -6,278 +6,200 @@
 <title>きもちチェック</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Nunito', sans-serif; background: #eef2ff; display: flex; justify-content: center; min-height: 100vh; padding: 20px 0; }
-.app { width: 100%; max-width: 390px; background: white; border-radius: 32px; box-shadow: 0 24px 64px rgba(0,0,0,0.13); overflow: hidden; align-self: flex-start; }
-.header { background: linear-gradient(135deg, #43cea2, #185a9d); color: white; padding: 32px 20px 20px; }
-.header-date { font-size: 12px; opacity: 0.8; margin-bottom: 4px; }
-.header-title { font-size: 20px; font-weight: 900; margin-bottom: 16px; }
-.tabs { display: flex; gap: 8px; }
-.tab-btn { flex: 1; padding: 8px; border-radius: 20px; border: none; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 800; background: rgba(255,255,255,0.25); color: white; transition: all 0.2s; }
-.tab-btn.active { background: white; color: #185a9d; }
-.panel { display: none; padding: 16px; }
-.panel.active { display: block; }
-.prog-bars { display: flex; gap: 5px; margin-bottom: 5px; }
-.prog-bar { flex: 1; height: 6px; border-radius: 10px; background: #ddd; transition: background 0.3s; }
-.prog-bar.done { background: #43cea2; }
-.prog-text { font-size: 11px; color: #aaa; font-weight: 800; margin-bottom: 14px; }
-.q-card { background: #fafafa; border-radius: 20px; padding: 16px; margin-bottom: 12px; border: 2px solid transparent; transition: border 0.2s; }
-.q-card.answered { border-color: #43cea2; }
-.q-head { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-.q-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #43cea2, #185a9d); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-.q-label { font-size: 10px; color: #aaa; font-weight: 800; letter-spacing: 1px; }
-.q-text { font-size: 14px; font-weight: 800; color: #333; }
-.emoji-row { display: flex; gap: 5px; }
-.emoji-btn { flex: 1; padding: 10px 2px; border-radius: 14px; border: 2px solid #eee; background: white; cursor: pointer; text-align: center; transition: all 0.15s; font-family: inherit; }
-.emoji-btn.selected { border-color: #43cea2; background: rgba(67,206,162,0.12); transform: scale(1.08); }
-.emoji-btn .e-icon { font-size: 20px; display: block; }
-.emoji-btn .e-label { font-size: 9px; color: #aaa; font-weight: 800; display: block; margin-top: 3px; }
-.emoji-btn.selected .e-label { color: #185a9d; }
-.comment-card { background: #fafafa; border-radius: 20px; padding: 16px; margin-bottom: 14px; }
-.comment-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-.comment-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, #f093fb, #f5576c); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-.comment-title { font-size: 14px; font-weight: 800; color: #333; }
-.comment-input { width: 100%; height: 85px; border-radius: 12px; border: 1.5px solid #eee; padding: 10px; font-size: 13px; font-family: inherit; resize: none; background: white; color: #333; }
-.submit-btn { width: 100%; padding: 15px; border-radius: 16px; border: none; font-family: inherit; font-size: 15px; font-weight: 900; cursor: pointer; transition: all 0.3s; background: #ddd; color: #aaa; }
-.submit-btn.ready { background: linear-gradient(135deg, #43cea2, #185a9d); color: white; box-shadow: 0 8px 24px rgba(67,206,162,0.35); }
-.done-screen { text-align: center; padding: 48px 20px; }
-.done-icon { font-size: 60px; margin-bottom: 14px; }
-.done-title { font-size: 22px; font-weight: 900; color: #333; margin-bottom: 8px; }
-.done-sub { font-size: 13px; color: #888; line-height: 1.8; margin-bottom: 24px; }
-.done-btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-.btn-green { padding: 11px 24px; border-radius: 50px; border: none; background: linear-gradient(135deg, #43cea2, #185a9d); color: white; font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit; }
-.btn-white { padding: 11px 24px; border-radius: 50px; border: 1.5px solid #eee; background: white; color: #aaa; font-size: 13px; font-weight: 800; cursor: pointer; font-family: inherit; }
-.summary-card { background: #fafafa; border-radius: 20px; padding: 16px; margin-bottom: 14px; }
-.summary-label { font-size: 11px; font-weight: 800; color: #aaa; letter-spacing: 1px; margin-bottom: 12px; }
-.sum-table { width: 100%; border-collapse: separate; border-spacing: 0 5px; }
-.sum-table th { font-size: 11px; font-weight: 800; color: #bbb; text-align: center; padding-bottom: 4px; }
-.sum-table th:first-child { text-align: left; padding-left: 8px; }
-.sum-table td { background: white; text-align: center; padding: 10px 4px; font-size: 20px; }
-.sum-table td:first-child { border-radius: 10px 0 0 10px; text-align: left; padding-left: 10px; font-size: 12px; font-weight: 900; color: #333; }
-.sum-table td:last-child { border-radius: 0 10px 10px 0; }
-.sum-table tr.this-week td { background: rgba(67,206,162,0.1); }
-.sum-table tr.this-week td:first-child { color: #185a9d; }
-.streak-row { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #eee; }
-.streak-badge { background: linear-gradient(135deg, #43cea2, #185a9d); color: white; font-size: 12px; font-weight: 900; padding: 5px 14px; border-radius: 50px; }
-.streak-text { font-size: 12px; color: #aaa; font-weight: 700; }
-.detail-title { font-size: 11px; font-weight: 800; color: #aaa; letter-spacing: 1px; margin-bottom: 10px; }
-.detail-card { background: white; border-radius: 16px; padding: 14px; margin-bottom: 10px; border-left: 3px solid #ccc; box-shadow: 0 3px 12px rgba(0,0,0,0.06); }
-.detail-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.detail-week { font-size: 14px; font-weight: 900; color: #333; }
-.detail-period { font-size: 11px; color: #aaa; }
-.detail-boxes { display: flex; gap: 6px; }
-.detail-box { flex: 1; background: #f9f9f9; border-radius: 10px; padding: 8px 4px; text-align: center; }
-.detail-box-label { font-size: 9px; color: #bbb; font-weight: 800; display: block; margin-bottom: 3px; }
-.detail-box-emoji { font-size: 22px; display: block; }
-.detail-comment { font-size: 12px; color: #888; background: #f9f9f9; border-radius: 8px; padding: 8px; margin-top: 8px; line-height: 1.6; font-weight: 700; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:#eef2ff;display:flex;justify-content:center;min-height:100vh;padding:20px 0}
+.app{width:100%;max-width:390px;background:white;border-radius:32px;box-shadow:0 24px 64px rgba(0,0,0,0.13);overflow:hidden;align-self:flex-start}
+.hdr{background:linear-gradient(135deg,#43cea2,#185a9d);color:white;padding:32px 20px 20px}
+.hdr-date{font-size:12px;opacity:.8;margin-bottom:4px}
+.hdr-title{font-size:20px;font-weight:900;margin-bottom:16px}
+.tabs{display:flex;gap:8px}
+.tab{flex:1;padding:8px;border-radius:20px;border:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:800;background:rgba(255,255,255,0.25);color:white}
+.tab.on{background:white;color:#185a9d}
+.pnl{display:none;padding:16px}
+.pnl.on{display:block}
+.pbars{display:flex;gap:5px;margin-bottom:5px}
+.pbar{flex:1;height:6px;border-radius:10px;background:#ddd;transition:background .3s}
+.pbar.done{background:#43cea2}
+.ptxt{font-size:11px;color:#aaa;font-weight:800;margin-bottom:14px}
+.qcard{background:#fafafa;border-radius:20px;padding:16px;margin-bottom:12px;border:2px solid transparent;transition:border .2s}
+.qcard.ok{border-color:#43cea2}
+.qhead{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.qico{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#43cea2,#185a9d);display:flex;justify-content:center;align-items:center;font-size:18px;flex-shrink:0}
+.qlbl{font-size:10px;color:#aaa;font-weight:800;letter-spacing:1px}
+.qtxt{font-size:14px;font-weight:800;color:#333}
+.erow{display:flex;gap:5px}
+.ebtn{flex:1;padding:10px 2px;border-radius:14px;border:2px solid #eee;background:white;cursor:pointer;text-align:center;font-family:inherit;transition:all .15s}
+.ebtn.on{border-color:#43cea2;background:rgba(67,206,162,0.12);transform:scale(1.08)}
+.eico{font-size:20px;display:block}
+.elbl{font-size:9px;color:#aaa;font-weight:800;display:block;margin-top:3px}
+.ebtn.on .elbl{color:#185a9d}
+.cmtcard{background:#fafafa;border-radius:20px;padding:16px;margin-bottom:14px}
+.cmthead{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.cmtico{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#f093fb,#f5576c);display:flex;justify-content:center;align-items:center;font-size:18px;flex-shrink:0}
+.cmttxt{font-size:14px;font-weight:800;color:#333}
+.cmtinput{width:100%;height:85px;border-radius:12px;border:1.5px solid #eee;padding:10px;font-size:13px;font-family:inherit;resize:none;background:white;color:#333}
+.subbtn{width:100%;padding:15px;border-radius:16px;border:none;font-family:inherit;font-size:15px;font-weight:900;cursor:pointer;background:#ddd;color:#aaa;transition:all .3s}
+.subbtn.go{background:linear-gradient(135deg,#43cea2,#185a9d);color:white;box-shadow:0 8px 24px rgba(67,206,162,0.35)}
+.done{text-align:center;padding:48px 20px}
+.done-ico{font-size:60px;margin-bottom:14px}
+.done-ttl{font-size:22px;font-weight:900;color:#333;margin-bottom:8px}
+.done-sub{font-size:13px;color:#888;line-height:1.8;margin-bottom:24px}
+.done-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.btnG{padding:11px 24px;border-radius:50px;border:none;background:linear-gradient(135deg,#43cea2,#185a9d);color:white;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit}
+.btnW{padding:11px 24px;border-radius:50px;border:1.5px solid #eee;background:white;color:#aaa;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit}
+.sumcard{background:#fafafa;border-radius:20px;padding:16px;margin-bottom:14px}
+.sumlbl{font-size:11px;font-weight:800;color:#aaa;letter-spacing:1px;margin-bottom:12px}
+.sumtbl{width:100%;border-collapse:separate;border-spacing:0 5px}
+.sumtbl th{font-size:11px;font-weight:800;color:#bbb;text-align:center;padding-bottom:4px}
+.sumtbl th:first-child{text-align:left;padding-left:8px}
+.sumtbl td{background:white;text-align:center;padding:10px 4px;font-size:20px}
+.sumtbl td:first-child{border-radius:10px 0 0 10px;text-align:left;padding-left:10px;font-size:12px;font-weight:900;color:#333}
+.sumtbl td:last-child{border-radius:0 10px 10px 0}
+.sumtbl tr.tw td{background:rgba(67,206,162,0.1)}
+.sumtbl tr.tw td:first-child{color:#185a9d}
+.strow{display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid #eee}
+.stbdg{background:linear-gradient(135deg,#43cea2,#185a9d);color:white;font-size:12px;font-weight:900;padding:5px 14px;border-radius:50px}
+.sttxt{font-size:12px;color:#aaa;font-weight:700}
+.dtitle{font-size:11px;font-weight:800;color:#aaa;letter-spacing:1px;margin-bottom:10px}
+.dcard{background:white;border-radius:16px;padding:14px;margin-bottom:10px;border-left:3px solid #ccc;box-shadow:0 3px 12px rgba(0,0,0,0.06)}
+.dhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.dwk{font-size:14px;font-weight:900;color:#333}
+.dper{font-size:11px;color:#aaa}
+.dboxes{display:flex;gap:6px}
+.dbox{flex:1;background:#f9f9f9;border-radius:10px;padding:8px 4px;text-align:center}
+.dblbl{font-size:9px;color:#bbb;font-weight:800;display:block;margin-bottom:3px}
+.dbico{font-size:22px;display:block}
+.dcmt{font-size:12px;color:#888;background:#f9f9f9;border-radius:8px;padding:8px;margin-top:8px;line-height:1.6;font-weight:700}
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="header">
-    <div class="header-date" id="hDate"></div>
-    <div class="header-title" id="hTitle">今週のきもちチェック 🌱</div>
-    <div class="tabs">
-      <button class="tab-btn active" id="tab-check" onclick="showTab('check')">今週</button>
-      <button class="tab-btn" id="tab-record" onclick="showTab('record')">きろく</button>
-    </div>
-  </div>
-
-  <div class="panel active" id="panel-check">
-    <div class="prog-bars">
-      <div class="prog-bar" id="pb1"></div>
-      <div class="prog-bar" id="pb2"></div>
-      <div class="prog-bar" id="pb3"></div>
-    </div>
-    <div class="prog-text" id="prog-text">0 / 3 回答済み</div>
-
-    <div class="q-card" id="qc1">
-      <div class="q-head">
-        <div class="q-icon">🏫</div>
-        <div><div class="q-label">Q1</div><div class="q-text">学校生活への満足度は？</div></div>
-      </div>
-      <div class="emoji-row" id="er1">
-        <button class="emoji-btn" onclick="selectAns(1,0,this)"><span class="e-icon">☀️</span><span class="e-label">最高！</span></button>
-        <button class="emoji-btn" onclick="selectAns(1,1,this)"><span class="e-icon">🌤️</span><span class="e-label">まあまあ</span></button>
-        <button class="emoji-btn" onclick="selectAns(1,2,this)"><span class="e-icon">☁️</span><span class="e-label">ふつう</span></button>
-        <button class="emoji-btn" onclick="selectAns(1,3,this)"><span class="e-icon">🌧️</span><span class="e-label">つらい</span></button>
-        <button class="emoji-btn" onclick="selectAns(1,4,this)"><span class="e-icon">⛈️</span><span class="e-label">しんどい</span></button>
-      </div>
-    </div>
-
-    <div class="q-card" id="qc2">
-      <div class="q-head">
-        <div class="q-icon">👫</div>
-        <div><div class="q-label">Q2</div><div class="q-text">友人関係は良好ですか？</div></div>
-      </div>
-      <div class="emoji-row" id="er2">
-        <button class="emoji-btn" onclick="selectAns(2,0,this)"><span class="e-icon">🥰</span><span class="e-label">最高！</span></button>
-        <button class="emoji-btn" onclick="selectAns(2,1,this)"><span class="e-icon">😊</span><span class="e-label">まあまあ</span></button>
-        <button class="emoji-btn" onclick="selectAns(2,2,this)"><span class="e-icon">😐</span><span class="e-label">ふつう</span></button>
-        <button class="emoji-btn" onclick="selectAns(2,3,this)"><span class="e-icon">😕</span><span class="e-label">微妙…</span></button>
-        <button class="emoji-btn" onclick="selectAns(2,4,this)"><span class="e-icon">😞</span><span class="e-label">しんどい</span></button>
-      </div>
-    </div>
-
-    <div class="q-card" id="qc3">
-      <div class="q-head">
-        <div class="q-icon">😴</div>
-        <div><div class="q-label">Q3</div><div class="q-text">最近よく眠れていますか？</div></div>
-      </div>
-      <div class="emoji-row" id="er3">
-        <button class="emoji-btn" onclick="selectAns(3,0,this)"><span class="e-icon">🌙</span><span class="e-label">ぐっすり</span></button>
-        <button class="emoji-btn" onclick="selectAns(3,1,this)"><span class="e-icon">😪</span><span class="e-label">まあまあ</span></button>
-        <button class="emoji-btn" onclick="selectAns(3,2,this)"><span class="e-icon">🥱</span><span class="e-label">ふつう</span></button>
-        <button class="emoji-btn" onclick="selectAns(3,3,this)"><span class="e-icon">😵</span><span class="e-label">眠れない</span></button>
-        <button class="emoji-btn" onclick="selectAns(3,4,this)"><span class="e-icon">🌑</span><span class="e-label">全然ダメ</span></button>
-      </div>
-    </div>
-
-    <div class="comment-card">
-      <div class="comment-head">
-        <div class="comment-icon">💬</div>
-        <div class="comment-title">なんでも書いていいよ（任意）</div>
-      </div>
-      <textarea class="comment-input" id="commentInput" placeholder="今週気になったこと、誰かに話したいこと…"></textarea>
-    </div>
-
-    <button class="submit-btn" id="submitBtn" onclick="submitCheck()">あと3問答えてね</button>
-  </div>
-
-  <div class="panel" id="panel-record">
-    <div class="summary-card">
-      <div class="summary-label">WEEKLY SUMMARY</div>
-      <table class="sum-table">
-        <thead><tr>
-          <th></th>
-          <th>🏫 学校</th>
-          <th>👫 友人</th>
-          <th>😴 睡眠</th>
-        </tr></thead>
-        <tbody id="summaryBody"></tbody>
-      </table>
-      <div class="streak-row">
-        <div class="streak-badge">継続中 🔥</div>
-        <div class="streak-text">この調子で続けよう！</div>
-      </div>
-    </div>
-    <div class="detail-title">週ごとのくわしいきろく</div>
-    <div id="detailCards"></div>
-  </div>
+<div class="hdr">
+<div class="hdr-date" id="D"></div>
+<div class="hdr-title" id="T">今週のきもちチェック 🌱</div>
+<div class="tabs">
+<button class="tab on" id="t1" onclick="ST('check')">今週</button>
+<button class="tab" id="t2" onclick="ST('record')">きろく</button>
 </div>
-
+</div>
+<div class="pnl on" id="check">
+<div class="pbars"><div class="pbar" id="b1"></div><div class="pbar" id="b2"></div><div class="pbar" id="b3"></div></div>
+<div class="ptxt" id="PT">0 / 3 回答済み</div>
+<div class="qcard" id="c1">
+<div class="qhead"><div class="qico">🏫</div><div><div class="qlbl">Q1</div><div class="qtxt">学校生活への満足度は？</div></div></div>
+<div class="erow">
+<button class="ebtn" onclick="SA(1,0,this)"><span class="eico">☀️</span><span class="elbl">最高！</span></button>
+<button class="ebtn" onclick="SA(1,1,this)"><span class="eico">🌤️</span><span class="elbl">まあまあ</span></button>
+<button class="ebtn" onclick="SA(1,2,this)"><span class="eico">☁️</span><span class="elbl">ふつう</span></button>
+<button class="ebtn" onclick="SA(1,3,this)"><span class="eico">🌧️</span><span class="elbl">つらい</span></button>
+<button class="ebtn" onclick="SA(1,4,this)"><span class="eico">⛈️</span><span class="elbl">しんどい</span></button>
+</div></div>
+<div class="qcard" id="c2">
+<div class="qhead"><div class="qico">👫</div><div><div class="qlbl">Q2</div><div class="qtxt">友人関係は良好ですか？</div></div></div>
+<div class="erow">
+<button class="ebtn" onclick="SA(2,0,this)"><span class="eico">🥰</span><span class="elbl">最高！</span></button>
+<button class="ebtn" onclick="SA(2,1,this)"><span class="eico">😊</span><span class="elbl">まあまあ</span></button>
+<button class="ebtn" onclick="SA(2,2,this)"><span class="eico">😐</span><span class="elbl">ふつう</span></button>
+<button class="ebtn" onclick="SA(2,3,this)"><span class="eico">😕</span><span class="elbl">微妙…</span></button>
+<button class="ebtn" onclick="SA(2,4,this)"><span class="eico">😞</span><span class="elbl">しんどい</span></button>
+</div></div>
+<div class="qcard" id="c3">
+<div class="qhead"><div class="qico">😴</div><div><div class="qlbl">Q3</div><div class="qtxt">最近よく眠れていますか？</div></div></div>
+<div class="erow">
+<button class="ebtn" onclick="SA(3,0,this)"><span class="eico">🌙</span><span class="elbl">ぐっすり</span></button>
+<button class="ebtn" onclick="SA(3,1,this)"><span class="eico">😪</span><span class="elbl">まあまあ</span></button>
+<button class="ebtn" onclick="SA(3,2,this)"><span class="eico">🥱</span><span class="elbl">ふつう</span></button>
+<button class="ebtn" onclick="SA(3,3,this)"><span class="eico">😵</span><span class="elbl">眠れない</span></button>
+<button class="ebtn" onclick="SA(3,4,this)"><span class="eico">🌑</span><span class="elbl">全然ダメ</span></button>
+</div></div>
+<div class="cmtcard">
+<div class="cmthead"><div class="cmtico">💬</div><div class="cmttxt">なんでも書いていいよ（任意）</div></div>
+<textarea class="cmtinput" id="CMT" placeholder="今週気になったこと…"></textarea>
+</div>
+<button class="subbtn" id="SB" onclick="SUB()">あと3問答えてね</button>
+</div>
+<div class="pnl" id="record">
+<div class="sumcard">
+<div class="sumlbl">WEEKLY SUMMARY</div>
+<table class="sumtbl">
+<thead><tr><th></th><th>🏫 学校</th><th>👫 友人</th><th>😴 睡眠</th></tr></thead>
+<tbody id="SB2"></tbody>
+</table>
+<div class="strow"><span class="stbdg">継続中 🔥</span><span class="sttxt">この調子で続けよう！</span></div>
+</div>
+<div class="dtitle">週ごとのくわしいきろく</div>
+<div id="DC"></div>
+</div>
+</div>
 <script>
-var ans = {1: null, 2: null, 3: null};
-var emojis = {
-  1: ['☀️','🌤️','☁️','🌧️','⛈️'],
-  2: ['🥰','😊','😐','😕','😞'],
-  3: ['🌙','😪','🥱','😵','🌑']
-};
-
-function showTab(tab) {
-  document.getElementById('panel-check').classList.remove('active');
-  document.getElementById('panel-record').classList.remove('active');
-  document.getElementById('tab-check').classList.remove('active');
-  document.getElementById('tab-record').classList.remove('active');
-  document.getElementById('panel-' + tab).classList.add('active');
-  document.getElementById('tab-' + tab).classList.add('active');
-  document.getElementById('hTitle').textContent = tab === 'check' ? '今週のきもちチェック 🌱' : 'きもちのきろく 📖';
-  window.scrollTo(0, 0);
-  if (tab === 'record') renderRecords();
+var A={1:null,2:null,3:null};
+var E={1:['☀️','🌤️','☁️','🌧️','⛈️'],2:['🥰','😊','😐','😕','😞'],3:['🌙','😪','🥱','😵','🌑']};
+function ST(tab){
+  document.querySelectorAll('.pnl').forEach(function(p){p.classList.remove('on')});
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on')});
+  document.getElementById(tab).classList.add('on');
+  document.getElementById(tab==='check'?'t1':'t2').classList.add('on');
+  document.getElementById('T').textContent=tab==='check'?'今週のきもちチェック 🌱':'きもちのきろく 📖';
+  window.scrollTo(0,0);
+  if(tab==='record')RR();
 }
-
-function selectAns(q, idx, btn) {
-  ans[q] = idx;
-  var row = document.getElementById('er' + q);
-  row.querySelectorAll('.emoji-btn').forEach(function(b) { b.classList.remove('selected'); });
-  btn.classList.add('selected');
-  document.getElementById('qc' + q).classList.add('answered');
-  updateProgress();
+function SA(q,i,btn){
+  A[q]=i;
+  btn.closest('.erow').querySelectorAll('.ebtn').forEach(function(b){b.classList.remove('on')});
+  btn.classList.add('on');
+  document.getElementById('c'+q).classList.add('ok');
+  UP();
 }
-
-function updateProgress() {
-  var count = 0;
-  [1,2,3].forEach(function(q) { if (ans[q] !== null) count++; });
-  document.getElementById('pb1').className = 'prog-bar' + (ans[1] !== null ? ' done' : '');
-  document.getElementById('pb2').className = 'prog-bar' + (ans[2] !== null ? ' done' : '');
-  document.getElementById('pb3').className = 'prog-bar' + (ans[3] !== null ? ' done' : '');
-  document.getElementById('prog-text').textContent = count + ' / 3 回答済み';
-  var btn = document.getElementById('submitBtn');
-  if (count === 3) {
-    btn.textContent = '記録する ✓';
-    btn.className = 'submit-btn ready';
-  } else {
-    btn.textContent = 'あと' + (3 - count) + '問答えてね';
-    btn.className = 'submit-btn';
-  }
+function UP(){
+  var n=0;
+  [1,2,3].forEach(function(q){if(A[q]!==null)n++});
+  document.getElementById('b1').className='pbar'+(A[1]!==null?' done':'');
+  document.getElementById('b2').className='pbar'+(A[2]!==null?' done':'');
+  document.getElementById('b3').className='pbar'+(A[3]!==null?' done':'');
+  document.getElementById('PT').textContent=n+' / 3 回答済み';
+  var sb=document.getElementById('SB');
+  if(n===3){sb.textContent='記録する ✓';sb.className='subbtn go';}
+  else{sb.textContent='あと'+(3-n)+'問答えてね';sb.className='subbtn';}
 }
-
-function submitCheck() {
-  if (ans[1] === null || ans[2] === null || ans[3] === null) return;
-  var today = new Date();
-  var record = {
-    date: today.toISOString().split('T')[0],
-    q1: emojis[1][ans[1]],
-    q2: emojis[2][ans[2]],
-    q3: emojis[3][ans[3]],
-    comment: document.getElementById('commentInput').value
-  };
-  var records = JSON.parse(localStorage.getItem('mh_records') || '[]');
-  records.unshift(record);
-  localStorage.setItem('mh_records', JSON.stringify(records));
-  document.getElementById('panel-check').innerHTML = '<div class="done-screen"><div class="done-icon">✨</div><div class="done-title">記録できたよ！</div><div class="done-sub">今週も正直に答えてくれてありがとう。<br>あなたの気持ちを大切にしていくね。</div><div class="done-btns"><button class="btn-green" onclick="showTab('record')">きろくを見る →</button><button class="btn-white" onclick="location.reload()">やり直す</button></div></div>';
+function SUB(){
+  if(A[1]===null||A[2]===null||A[3]===null)return;
+  var r={date:new Date().toISOString().split('T')[0],q1:E[1][A[1]],q2:E[2][A[2]],q3:E[3][A[3]],comment:document.getElementById('CMT').value};
+  var rs=JSON.parse(localStorage.getItem('mh')||'[]');
+  rs.unshift(r);
+  localStorage.setItem('mh',JSON.stringify(rs));
+  document.getElementById('check').innerHTML='<div class="done"><div class="done-ico">✨</div><div class="done-ttl">記録できたよ！</div><div class="done-sub">今週も正直に答えてくれてありがとう。<br>あなたの気持ちを大切にしていくね。</div><div class="done-btns"><button class="btnG" onclick="ST('record')">きろくを見る →</button><button class="btnW" onclick="location.reload()">やり直す</button></div></div>';
 }
-
-function getStartOfWeek(d) {
-  var nd = new Date(d);
-  var day = nd.getDay();
-  nd.setDate(nd.getDate() - day + (day === 0 ? -6 : 1));
-  nd.setHours(0,0,0,0);
-  return nd;
-}
-
-function getWeekDiff(dateStr) {
-  var msInWeek = 7*24*60*60*1000;
-  var now = getStartOfWeek(new Date());
-  var rec = getStartOfWeek(new Date(dateStr));
-  return Math.round((now - rec) / msInWeek);
-}
-
-function renderRecords() {
-  var records = JSON.parse(localStorage.getItem('mh_records') || '[]');
-  var tbody = document.getElementById('summaryBody');
-  var cards = document.getElementById('detailCards');
-  tbody.innerHTML = '';
-  cards.innerHTML = '';
-  var labels = ['今週 ✦','先週','2週前','3週前'];
-  var colors = ['#43cea2','#3498db','#FF9F43','#bbb'];
-  var shown = {};
-  records.forEach(function(r) {
-    var diff = getWeekDiff(r.date);
-    if (diff < 0 || diff > 3 || shown[diff]) return;
-    shown[diff] = true;
-    var label = labels[diff];
-    var color = colors[diff];
-    var tr = document.createElement('tr');
-    if (diff === 0) tr.className = 'this-week';
-    tr.innerHTML = '<td>' + label + '</td><td>' + r.q1 + '</td><td>' + r.q2 + '</td><td>' + r.q3 + '</td>';
-    tbody.appendChild(tr);
-    var card = document.createElement('div');
-    card.className = 'detail-card';
-    card.style.borderLeftColor = color;
-    card.innerHTML = '<div class="detail-head"><span class="detail-week">' + label + '</span><span class="detail-period">' + r.date + '</span></div><div class="detail-boxes"><div class="detail-box"><span class="detail-box-label">🏫 学校</span><span class="detail-box-emoji">' + r.q1 + '</span></div><div class="detail-box"><span class="detail-box-label">👫 友人</span><span class="detail-box-emoji">' + r.q2 + '</span></div><div class="detail-box"><span class="detail-box-label">😴 睡眠</span><span class="detail-box-emoji">' + r.q3 + '</span></div></div>' + (r.comment ? '<div class="detail-comment">' + r.comment + '</div>' : '');
-    cards.appendChild(card);
+function GSW(d){var nd=new Date(d);var day=nd.getDay();nd.setDate(nd.getDate()-day+(day===0?-6:1));nd.setHours(0,0,0,0);return nd;}
+function GWD(ds){var ms=7*24*60*60*1000;return Math.round((GSW(new Date())-GSW(new Date(ds)))/ms);}
+function RR(){
+  var rs=JSON.parse(localStorage.getItem('mh')||'[]');
+  var tb=document.getElementById('SB2');
+  var dc=document.getElementById('DC');
+  tb.innerHTML='';dc.innerHTML='';
+  var LB=['今週 ✦','先週','2週前','3週前'];
+  var CL=['#43cea2','#3498db','#FF9F43','#bbb'];
+  var seen={};
+  rs.forEach(function(r){
+    var d=GWD(r.date);
+    if(d<0||d>3||seen[d])return;
+    seen[d]=true;
+    var lb=LB[d],cl=CL[d];
+    var tr=document.createElement('tr');
+    if(d===0)tr.className='tw';
+    tr.innerHTML='<td>'+lb+'</td><td>'+r.q1+'</td><td>'+r.q2+'</td><td>'+r.q3+'</td>';
+    tb.appendChild(tr);
+    var cd=document.createElement('div');
+    cd.className='dcard';
+    cd.style.borderLeftColor=cl;
+    cd.innerHTML='<div class="dhead"><span class="dwk">'+lb+'</span><span class="dper">'+r.date+'</span></div><div class="dboxes"><div class="dbox"><span class="dblbl">🏫 学校</span><span class="dbico">'+r.q1+'</span></div><div class="dbox"><span class="dblbl">👫 友人</span><span class="dbico">'+r.q2+'</span></div><div class="dbox"><span class="dblbl">😴 睡眠</span><span class="dbico">'+r.q3+'</span></div></div>'+(r.comment?'<div class="dcmt">'+r.comment+'</div>':'');
+    dc.appendChild(cd);
   });
 }
-
-// 日付表示
-document.getElementById('hDate').textContent = new Date().toLocaleDateString('ja-JP', {year:'numeric',month:'long',day:'numeric',weekday:'short'});
-
-// サンプルデータ
-if (!localStorage.getItem('mh_records')) {
-  localStorage.setItem('mh_records', JSON.stringify([
-    {date:'2026-03-17',q1:'☀️',q2:'😊',q3:'🌙',comment:'友達と放課後カフェ行った。楽しかった！'},
-    {date:'2026-03-10',q1:'☁️',q2:'😕',q3:'😵',comment:'しんどかった週。眠れなかった'},
+document.getElementById('D').textContent=new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric',weekday:'short'});
+if(!localStorage.getItem('mh')){
+  localStorage.setItem('mh',JSON.stringify([
+    {date:'2026-03-17',q1:'☀️',q2:'😊',q3:'🌙',comment:'友達と放課後カフェ行った！'},
+    {date:'2026-03-10',q1:'☁️',q2:'😕',q3:'😵',comment:'しんどかった週'},
     {date:'2026-03-03',q1:'🌧️',q2:'😐',q3:'🥱',comment:''}
   ]));
 }
